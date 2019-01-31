@@ -1,0 +1,1 @@
+EECS 4313 Assignment 1 - Python scripts for extracting information from bug reports. Creating a dashboard for a manager.
