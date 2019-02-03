@@ -12,6 +12,7 @@ totalBugCount = 0
 resolutionDict = defaultdict(int)
 resolutionTime = []
 medianVal = 0;
+issueTypeDict = defaultdict(int)
 # for files in os.walk("C:/Users/adria/Documents/4313/Assignment_1/Test"):
 # path = "C:/Users/adria/Documents/4313/Assignment_1/Test"
 path = "C:/Users/adria/Documents/4313/Assignment_1/hbaseBugReport"
@@ -24,7 +25,20 @@ for file in listFiles:
         totalfileCount += 1
         contents =f.read()
         # print("2")
-        if "https://issues.apache.org/jira/images/icons/issuetypes/bug.png" in contents:
+        isBug = re.findall('<type\sid=\".*\"\siconUrl=\".*\">(.*)</type>', contents)
+
+        try:
+
+            if isBug[0] in issueTypeDict:
+                issueTypeDict[isBug[0]] += 1
+                # print("incremented")
+            else:
+                issueTypeDict[isBug[0]] = 1
+        except:
+            print("failed")
+
+
+        if isBug[0] == "Bug":
             # if "<resolution id=" in contents:
             # re.search(r'',contents)
             totalBugCount = totalBugCount + 1
@@ -65,6 +79,7 @@ for file in listFiles:
 
 print("Total amount of Bug Reports: ", str(totalfileCount))
 print("Total Falied to process: ", str(totalfailedCount))
+print(dict(issueTypeDict))
 print("Total Amount of bugs: ", str(totalBugCount))
 print(dict(resolutionDict))
 print("---------------------------------------------------------------------")
