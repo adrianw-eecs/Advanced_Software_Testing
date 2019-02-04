@@ -11,7 +11,8 @@ totalfailedCount = 0
 totalBugCount = 0
 resolutionDict = defaultdict(int)
 resolutionTime = []
-medianVal = 0;
+statusDict = defaultdict(int)
+medianVal = 0
 issueTypeDict = defaultdict(int)
 # for files in os.walk("C:/Users/adria/Documents/4313/Assignment_1/Test"):
 # path = "C:/Users/adria/Documents/4313/Assignment_1/Test"
@@ -39,38 +40,40 @@ for file in listFiles:
 
 
         if isBug[0] == "Bug":
-            # if "<resolution id=" in contents:
-            # re.search(r'',contents)
             totalBugCount = totalBugCount + 1
+            bugres2 = re.findall('<status\sid=\".*\"\siconUrl=\".*\"\sdescription=\".*\">(.*)<\/status>', contents)
             bugResolution = re.findall('<resolution\sid=\".*\">(.*)</resolution>', contents)
             createdTimeRE = re.findall('<created>(.*)</created>', contents)
             resolutionTimeRE = re.findall('<resolved>(.*)</resolved>', contents)
 
-
-
-            # print(value)
-            # print("Bug and value is: " + key)
             try:
+                # print(bugResolution)
                 if "&apos;" in bugResolution[0]:
-                    key = bugResolution[0].replace("&apos;", "'")
+                    key1 = bugResolution[0].replace("&apos;", "'")
                 else:
-                    key = bugResolution[0]
+                    key1 = bugResolution[0]
 
-                if key in resolutionDict:
-                    resolutionDict[key] += 1
+                key2 = bugres2[0]
+                if key2 in statusDict:
+                    statusDict[key2] += 1
                     # print("incremented")
                 else:
-                    resolutionDict[key] = 1
+                    statusDict[key2] = 1
                     # print("created")
-                if key == 'Fixed':
+
+                if key1 in resolutionDict:
+                    resolutionDict[key1] += 1
+                    # print("incremented")
+                else:
+                    resolutionDict[key1] = 1
+                    # print("created")
+
+                if key2 == 'Closed' or key1 == "Fixed":
                     createDate = datetime.strptime(createdTimeRE[0], "%a, %d %b %Y %H:%M:%S %z")
                     resolutionDate = datetime.strptime(resolutionTimeRE[0], "%a, %d %b %Y %H:%M:%S %z")
                     totalTime = resolutionDate - createDate
                     totalTime = totalTime.days
                     resolutionTime.append(totalTime)
-
-
-
             except:
                 totalfailedCount += 1
                 print(file)
@@ -81,7 +84,9 @@ print("Total amount of Bug Reports: ", str(totalfileCount))
 print("Total Falied to process: ", str(totalfailedCount))
 print(dict(issueTypeDict))
 print("Total Amount of bugs: ", str(totalBugCount))
+print(dict(statusDict))
 print(dict(resolutionDict))
+
 print("---------------------------------------------------------------------")
 print("Fixed Bugs, resolution times below")
 # print(resolutionTime)
@@ -98,43 +103,3 @@ else:
 
 
 print("Median resolution time:", medianVal)
-
-# for x in resolutionTime:
-#     print(x.days)
-
-
-
-            # print(value[0])
-
-
-
-
-
-
-
-
-
-    # for file in files:
-    #     print(file[1])
-        # for thefile in file:
-            # with open(file) as openFile:
-            #
-            #     for line in openFile:
-            #         potentialBug = False
-            #         potentialValue = 99
-            #         if "https://issues.apache.org/jira/images/icons/issuetypes/bug.png" in line:
-            #             print("Bug matched: " + line)
-            #             potentialBug = True
-            #         if "<resolution id=" in line:
-            #             print("Res matched: " + line)
-            #             potentialValue = re.findall('"([^"]*)"', line)
-            #         if potentialBug == True and not potentialValue == 99:
-            #             print("boug find with value" + potentialValue)
-
-
-
-
-
-
-
-
